@@ -1,5 +1,6 @@
 package courseWork.courseWork2.question;
 
+
 import java.util.Objects;
 
 public class Question {

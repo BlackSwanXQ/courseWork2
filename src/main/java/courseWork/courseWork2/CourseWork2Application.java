@@ -9,6 +9,7 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.web.servlet.ServletComponentScan;
 import org.springframework.stereotype.Service;
 
+
 @SpringBootApplication
 public class CourseWork2Application {
 
