@@ -7,7 +7,6 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.Collection;
 
-
 @RestController
 @RequestMapping("exam/java/random")
 public class ExamController {

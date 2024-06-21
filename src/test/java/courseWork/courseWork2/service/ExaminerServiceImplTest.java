@@ -1,7 +1,6 @@
 package courseWork.courseWork2.service;
 
-
-import courseWork.courseWork2.exceptions.AmountExceeded;
+import courseWork.courseWork2.exceptions.AmountExceededException;
 import courseWork.courseWork2.interfaces.QuestionService;
 import courseWork.courseWork2.question.Question;
 import org.assertj.core.api.Assertions;
@@ -15,14 +14,13 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThatExceptionOfType;
-import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
 class ExaminerServiceImplTest {
 
     @Mock
-    private JavaQuestionServiceImpl questionService;
+    private QuestionService questionService;
     @InjectMocks
     private ExaminerServiceImpl examinerService;
 
@@ -34,19 +32,28 @@ class ExaminerServiceImplTest {
             new Question("question5", "answer5")
     );
 
-    private final Question question1 = new Question("question1", "answer1");
-
+    @BeforeEach
+    void setUp() {
+        when(questionService.getAll()).thenReturn(questions);
+    }
 
     @Test
     void getQuestionsTest() {
-        when(questionService.getAll()).thenReturn(questions);
-        when(questionService.getRandomQuestion()).thenReturn(questions.get(4));
-        Assertions.assertThat(examinerService.getQuestions(1)).contains(questions.get(4));
+        when(questionService.getRandomQuestion())
+                .thenReturn(questions.get(1))
+                .thenReturn(questions.get(3))
+                .thenReturn(questions.get(4));
+        Assertions.assertThat(examinerService.getQuestions(3))
+                .contains(questions.get(1))
+                .contains(questions.get(3))
+                .contains(questions.get(4));
     }
+
     @Test
     void getQuestionsThrowException() {
-        when(questionService.getAll()).thenReturn(questions);
-        assertThatExceptionOfType(AmountExceeded.class)
-                .isThrownBy(() -> examinerService.getQuestions(6));
-    }
+        assertThatExceptionOfType(AmountExceededException.class)
+                .isThrownBy(() -> {examinerService.getQuestions(6);
+                examinerService.getQuestions(-1);
+    } );
+}
 }

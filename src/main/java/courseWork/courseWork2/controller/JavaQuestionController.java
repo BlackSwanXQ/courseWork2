@@ -1,6 +1,5 @@
 package courseWork.courseWork2.controller;
 
-
 import courseWork.courseWork2.interfaces.QuestionService;
 import courseWork.courseWork2.question.Question;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -24,8 +23,8 @@ public class JavaQuestionController {
     @GetMapping("/add")
     public Question add(@RequestParam String question,
                         @RequestParam String answer) {
-        return questionService.add(question, answer);
-
+        return questionService.add(new Question(question, answer));
+//        return questionService.add(question, answer);
     }
 
     @GetMapping("/remove")
@@ -36,7 +35,7 @@ public class JavaQuestionController {
 
     @GetMapping("/find")
     public Question find(@RequestParam String question,
-                           @RequestParam String answer) {
+                         @RequestParam String answer) {
         return questionService.find(question, answer);
     }
 

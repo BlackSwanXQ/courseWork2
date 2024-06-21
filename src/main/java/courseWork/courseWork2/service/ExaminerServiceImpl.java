@@ -1,7 +1,6 @@
 package courseWork.courseWork2.service;
 
-
-import courseWork.courseWork2.exceptions.AmountExceeded;
+import courseWork.courseWork2.exceptions.AmountExceededException;
 import courseWork.courseWork2.interfaces.ExaminerService;
 import courseWork.courseWork2.interfaces.QuestionService;
 import courseWork.courseWork2.question.Question;
@@ -12,28 +11,21 @@ import java.util.*;
 @Service
 public class ExaminerServiceImpl implements ExaminerService {
     public final QuestionService questionService;
-    private final List<Question> randomQuestionList;
 
     public ExaminerServiceImpl(QuestionService questionService) {
         this.questionService = questionService;
-        this.randomQuestionList = new ArrayList<>();
     }
 
 
     @Override
     public Collection<Question> getQuestions(int amount) {
-        if (questionService.getAll().size() < amount) {
-            throw new AmountExceeded("Amount exceeded");
+        if (questionService.getAll().size() < amount || amount < 0) {
+            throw new AmountExceededException("Amount exceeded");
         }
-        randomQuestionList.clear();
-        int counter = 0;
-        while (counter < amount) {
-            Question question = questionService.getRandomQuestion();
-            if (!randomQuestionList.contains(question)) {
-                randomQuestionList.add(question);
-                counter++;
-            }
+        Set<Question> questions = new HashSet<>();
+        while (questions.size() < amount) {
+            questions.add(questionService.getRandomQuestion());
         }
-        return randomQuestionList;
+        return questions;
     }
 }

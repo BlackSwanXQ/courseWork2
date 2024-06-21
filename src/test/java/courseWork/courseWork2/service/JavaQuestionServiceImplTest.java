@@ -1,6 +1,5 @@
 package courseWork.courseWork2.service;
 
-
 import courseWork.courseWork2.exceptions.QuestionAlreadyAddedException;
 import courseWork.courseWork2.exceptions.QuestionNotFoundException;
 import courseWork.courseWork2.interfaces.QuestionService;
@@ -9,21 +8,31 @@ import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import org.mockito.junit.jupiter.MockitoExtension;
 
 import static org.assertj.core.api.Assertions.assertThatExceptionOfType;
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
+import static org.mockito.Mockito.when;
 
 import java.util.List;
+import java.util.Random;
+import java.util.Set;
+import java.util.concurrent.ThreadLocalRandom;
 
+@ExtendWith(MockitoExtension.class)
 class JavaQuestionServiceImplTest {
     private QuestionService service = new JavaQuestionServiceImpl();
-    private final List<Question> questions = List.of(
+    private final Set<Question> questions = Set.of(
             new Question("question1", "answer1"),
             new Question("question2", "answer2"),
             new Question("question3", "answer3"),
             new Question("question4", "answer4"),
             new Question("question5", "answer5")
     );
+
 
     @BeforeEach
     void setUp() {
@@ -58,6 +67,7 @@ class JavaQuestionServiceImplTest {
         assertThat(actual).isEqualTo(expected);
         assertThat(actual).isNotIn(service.getAll());
     }
+
     @Test
     void removeQuestionNotFoundTest() {
         assertThatExceptionOfType(QuestionNotFoundException.class)
@@ -65,9 +75,8 @@ class JavaQuestionServiceImplTest {
     }
 
     @Test
-    void findEmployeeTest() {
+    void findQuestionTest() {
         Question expected = new Question("question1", "answer1");
-        Assertions.assertThat(service.getAll().contains(expected));
         Question actual = service.find("question1", "answer1");
         Assertions.assertThat(actual).isEqualTo(expected);
     }
@@ -80,11 +89,14 @@ class JavaQuestionServiceImplTest {
 
     @Test
     void getAllQuestionsTest() {
-//        assertThat(service.getAll()).containsExactlyInAnyOrderElementsOf(questions);
         assertThat(service.getAll().containsAll(questions));
     }
 
     @Test
     void getRandomQuestion() {
+//        int random = ThreadLocalRandom.current().nextInt(0, questions.size());
+        Question actual = service.getRandomQuestion();
+//        Question expected = questions.stream().skip(random).findFirst().get();
+        assertThat(actual).isIn(service.getAll());
     }
 }
