@@ -1,6 +1,5 @@
 package courseWork.courseWork2.service;
 
-import courseWork.courseWork2.exceptions.AmountExceededException;
 import courseWork.courseWork2.exceptions.QuestionAlreadyAddedException;
 import courseWork.courseWork2.exceptions.QuestionNotFoundException;
 import courseWork.courseWork2.exceptions.QuestionsAreEmptyException;
@@ -8,20 +7,19 @@ import courseWork.courseWork2.interfaces.QuestionRepository;
 import courseWork.courseWork2.interfaces.QuestionService;
 import courseWork.courseWork2.question.Question;
 import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.context.annotation.Primary;
 import org.springframework.stereotype.Service;
-import org.springframework.web.bind.annotation.PathVariable;
 
-import java.util.*;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.HashSet;
+import java.util.Set;
 import java.util.concurrent.ThreadLocalRandom;
 
-@Service("java")
-//@Primary
-public class JavaQuestionServiceImpl implements QuestionService {
-
+@Service("math")
+public class MathQuestionServiceImpl implements QuestionService {
     private final QuestionRepository questionRepository;
 
-    public JavaQuestionServiceImpl(@Qualifier("javaRepository") QuestionRepository questionRepository) {
+    public MathQuestionServiceImpl(@Qualifier("mathRepository") QuestionRepository questionRepository) {
         this.questionRepository = questionRepository;
     }
 
@@ -56,6 +54,5 @@ public class JavaQuestionServiceImpl implements QuestionService {
                 .skip(randomQuestion)
                 .findFirst()
                 .orElseThrow();
-//                .orElseThrow(QuestionsAreEmptyException::new);
     }
 }

@@ -7,6 +7,8 @@ import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.ValueSource;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
@@ -17,12 +19,12 @@ import static org.assertj.core.api.Assertions.assertThatExceptionOfType;
 import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
-class ExaminerServiceImplTest {
+class JavaExaminerServiceImplTest {
 
     @Mock
     private QuestionService questionService;
     @InjectMocks
-    private ExaminerServiceImpl examinerService;
+    private JavaExaminerServiceImpl examinerService;
 
     private final List<Question> questions = List.of(
             new Question("question1", "answer1"),
@@ -39,21 +41,27 @@ class ExaminerServiceImplTest {
 
     @Test
     void getQuestionsTest() {
-        when(questionService.getRandomQuestion())
-                .thenReturn(questions.get(1))
-                .thenReturn(questions.get(3))
-                .thenReturn(questions.get(4));
-        Assertions.assertThat(examinerService.getQuestions(3))
-                .contains(questions.get(1))
-                .contains(questions.get(3))
-                .contains(questions.get(4));
+        when(questionService.getRandomQuestion()).thenReturn(
+                new Question("question2", "answer2"),
+                new Question("question2", "answer2"),
+                new Question("question4", "answer4"),
+                new Question("question1", "answer1"),
+                new Question("question4", "answer4"),
+                new Question("question5", "answer5")
+        );
+
+        Assertions.assertThat(examinerService.getQuestions(4)).containsExactlyInAnyOrder(
+                new Question("question1", "answer1"),
+                new Question("question2", "answer2"),
+                new Question("question4", "answer4"),
+                new Question("question5", "answer5")
+        );
     }
 
-    @Test
-    void getQuestionsThrowException() {
+    @ParameterizedTest
+    @ValueSource(ints = {6, -1})
+    void getQuestionsThrowException(int amount) {
         assertThatExceptionOfType(AmountExceededException.class)
-                .isThrownBy(() -> {examinerService.getQuestions(6);
-                examinerService.getQuestions(-1);
-    } );
-}
+                .isThrownBy(() -> examinerService.getQuestions(amount));
+    }
 }

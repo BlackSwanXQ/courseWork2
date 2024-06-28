@@ -1,5 +1,8 @@
 package courseWork.courseWork2.question;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
+
 import java.util.Objects;
 
 public class Question {
